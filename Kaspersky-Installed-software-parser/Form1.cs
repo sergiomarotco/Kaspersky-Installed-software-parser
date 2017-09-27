@@ -280,6 +280,7 @@ namespace Kaspersky_Installed_software_parser
                     catch { }
                 }
                 BadRichTextBox.Lines = BadRichTextBox.Lines.Distinct().ToArray();
+                dataGridView1.CurrentCell = dataGridView1[0, dataGridView1.SelectedRows[0].Index + 1];
             }
         }
 
@@ -314,6 +315,7 @@ namespace Kaspersky_Installed_software_parser
                     catch { }
                 }
                 WhiteRichTextBox.Lines = WhiteRichTextBox.Lines.Distinct().ToArray();
+                dataGridView1.CurrentCell = dataGridView1[0, dataGridView1.SelectedRows[0].Index + 1];
             }
         }
 
