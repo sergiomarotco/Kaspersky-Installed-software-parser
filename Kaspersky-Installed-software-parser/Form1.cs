@@ -70,6 +70,7 @@ namespace Kaspersky_Installed_software_parser
             }
             catch { }
         }
+
         private List<Programms> P = new List<Programms>();
         private string[] Applications_white;
         private string[] Applications_bad;
@@ -105,7 +106,7 @@ namespace Kaspersky_Installed_software_parser
                     int colNo = Sheet.UsedRange.Columns.Count;
                     int rowNo = Sheet.UsedRange.Rows.Count;
                     object[,] array = Sheet.UsedRange.Value;
-                    if (array != null)
+                    if (array != null && Applications_bad.Length != 0 && Applications_white.Length != 0)
                     {
                         white.Tables.Add();
                         P.Clear();
@@ -143,11 +144,12 @@ namespace Kaspersky_Installed_software_parser
                                 {
                                     dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "Need request");
                                     array[i, 1] = "";
-                                 }
+                                }
                             }
                         }
+
                         Thread rfgfsd = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
-                        rfgfsd.Start((object)(rowNo-1));
+                        rfgfsd.Start((object)(rowNo - 1));
                     }
                 }
                 dataGridView1.Refresh();
