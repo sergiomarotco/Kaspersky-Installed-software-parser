@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -67,12 +65,11 @@ namespace Kaspersky_Installed_software_parser
                         dnsname = Dns.GetHostEntry(str[0]).HostName;
                     }
                     catch (Exception ee) { dnsname = ee.Message; }
-                    Invoke((ThreadStart)delegate { dataGridView1.Rows[Convert.ToInt32(str[1])].Cells[2].Value = dnsname; dataGridView1.Refresh(); });
+                    Invoke((ThreadStart)delegate { dataGridView1.Rows[Convert.ToInt32(str[1])].Cells[2].Value = dnsname; iter++; label7.Text = iter.ToString() + " / " + dataGridView1.Rows.Count; label7.Refresh(); });
                 }
             }
             catch { }
         }
-
         private List<Programms> P = new List<Programms>();
         private string[] Applications_white;
         private string[] Applications_bad;
@@ -86,10 +83,15 @@ namespace Kaspersky_Installed_software_parser
             }
             catch { return false; }
         }
-
+        private int iter = 0;
         private void Button1_Click(object sender, EventArgs e)
         {
-            openFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
+            OpenFileDialog openFileDialog1 = new OpenFileDialog()
+            {
+                Filter = "XLS files(*.xls)|*.xls|TXT files(*.txt)|*.txt",
+                CheckFileExists = true,
+                InitialDirectory = Directory.GetCurrentDirectory()
+            };
             if (openFileDialog1.ShowDialog() == DialogResult.OK && openFileDialog1.FileName.Contains(".xls", StringComparison.OrdinalIgnoreCase))
             {
                 BoxApplications.Text = openFileDialog1.FileName;
@@ -105,11 +107,10 @@ namespace Kaspersky_Installed_software_parser
                     if (array != null)
                     {
                         white.Tables.Add();
-                        int iter = 0; P.Clear();
+                        P.Clear();
                         P = new List<Programms>();
                         for (int i = 9; i < rowNo; i++)
                         {
-                            label7.Text = iter.ToString() + " / " + (rowNo - 9 - 1).ToString();
                             P.Add(new Programms(array[i, 1].ToString(), array[i, 3].ToString()));
                             bool next = false;
                             if (!array[i, 1].Equals(""))
@@ -119,15 +120,11 @@ namespace Kaspersky_Installed_software_parser
                                     if (!Applications_white[j].Equals("") && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_white[j], StringComparison.OrdinalIgnoreCase))
                                     {
                                         dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "White");
-                                        //dataGridView1.Refresh();
                                         array[i, 1] = "";//заменить на удаление строки
-                                                         //Sheet.UsedRange.Value = array;// set the value back into the range.
-                                        iter++;
                                         next = true;
                                         break;
                                     }
                                 }
-
                                 if (!next)
                                 {
                                     for (int j = 0; j < Applications_bad.Length; j++)
@@ -136,8 +133,6 @@ namespace Kaspersky_Installed_software_parser
                                         {
                                             dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "Bad");
                                             array[i, 1] = "";//заменить на удаление строки
-                                                             //Sheet.UsedRange.Value = array;// set the value back into the range.
-                                            iter++;
                                             next = true;
                                             break;
                                         }
@@ -147,22 +142,11 @@ namespace Kaspersky_Installed_software_parser
                                 {
                                     dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "Need request");
                                     array[i, 1] = "";
-                                    //Sheet.UsedRange.Value = array;// set the value back into the range.
-                                    iter++;
-                                }
+                                 }
                             }
                         }
-                        for (int j = 0; j < dataGridView1.Rows.Count; j++)
-                        {
-                            try
-                            {
-                                string ip = dataGridView1.Rows[j].Cells[1].Value.ToString();
-                                Thread myThread = new Thread(new ParameterizedThreadStart(GetHostEntry));
-                                string[] h = new string[2] { ip, j.ToString() };
-                                myThread.Start((object)h);
-                            }
-                            catch { }
-                        }
+                        Thread rfgfsd = new Thread(new ParameterizedThreadStart(dgfdf));
+                        rfgfsd.Start((object)(rowNo-1));
                     }
                 }
                 dataGridView1.Refresh();
@@ -188,7 +172,20 @@ namespace Kaspersky_Installed_software_parser
                 }
             }
         }
-
+         
+        void dgfdf(object rowNo)
+        {
+            for (int j = 0; j < dataGridView1.Rows.Count; j++)
+            {
+                try
+                {
+                    Thread myThread = new Thread(new ParameterizedThreadStart(GetHostEntry));
+                    string[] h = new string[3] { dataGridView1.Rows[j].Cells[1].Value.ToString(), j.ToString(), rowNo.ToString() };
+                    myThread.Start((object)h);
+                }
+                catch { }
+            }
+        }
         private void Button2_Click(object sender, EventArgs e)
         {
             openFileDialog2.InitialDirectory = Directory.GetCurrentDirectory();

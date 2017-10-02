@@ -31,7 +31,6 @@
             this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.BoxApplications = new System.Windows.Forms.TextBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.label1 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
@@ -85,11 +84,6 @@
             this.BoxApplications.Size = new System.Drawing.Size(351, 22);
             this.BoxApplications.TabIndex = 1;
             this.BoxApplications.Text = "installed software.xls";
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "XLS files (*.xls)|*.xls|TXT files (*.txt)|*.txt";
             // 
             // label1
             // 
@@ -382,7 +376,6 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox BoxApplications;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button button2;
