@@ -83,6 +83,7 @@ namespace Kaspersky_Installed_software_parser
             }
             catch { return false; }
         }
+
         private int iter = 0;
         private void Button1_Click(object sender, EventArgs e)
         {
@@ -145,7 +146,7 @@ namespace Kaspersky_Installed_software_parser
                                  }
                             }
                         }
-                        Thread rfgfsd = new Thread(new ParameterizedThreadStart(dgfdf));
+                        Thread rfgfsd = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
                         rfgfsd.Start((object)(rowNo-1));
                     }
                 }
@@ -173,7 +174,7 @@ namespace Kaspersky_Installed_software_parser
             }
         }
          
-        void dgfdf(object rowNo)
+        void Refresh_datagridview(object rowNo)
         {
             for (int j = 0; j < dataGridView1.Rows.Count; j++)
             {
@@ -186,6 +187,7 @@ namespace Kaspersky_Installed_software_parser
                 catch { }
             }
         }
+
         private void Button2_Click(object sender, EventArgs e)
         {
             openFileDialog2.InitialDirectory = Directory.GetCurrentDirectory();
