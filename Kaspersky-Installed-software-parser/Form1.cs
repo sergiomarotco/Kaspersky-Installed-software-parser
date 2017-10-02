@@ -22,13 +22,24 @@ namespace Kaspersky_Installed_software_parser
             Set_white();
             Set_Bad();
         }
-
+        private List<string> WhatToConvertT;
         private string Set_white()
         {
             FileInfo F = new FileInfo(BoxWhite.Text);
             if (F.Exists)
             {
-                Applications_white = File.ReadAllLines(BoxWhite.Text, Encoding.Default);
+                WhatToConvertT = new List<string>();
+                Applications_white = File.ReadAllLines(BoxWhite.Text, Encoding.UTF8);
+                for (int i = 0; i < Applications_white.Length; i++)
+                {
+                    if (Applications_white[i] != "")
+                    {
+                        WhatToConvertT.Add(Applications_white[i]);
+                    }
+                }
+
+                File.WriteAllLines(BoxWhite.Text, ListToStringArray(WhatToConvertT));
+                WhatToConvertT.Clear();
                 return F.FullName;
             }
             else
@@ -37,12 +48,35 @@ namespace Kaspersky_Installed_software_parser
             }
         }
 
+        private string[] ListToStringArray(List<string> WhatToConvert)
+        {
+            string[] output = new string[0];
+            try
+            {
+                output = new string[WhatToConvert.Count];
+                for (int i = 0; i < WhatToConvert.Count; i++)
+                    output[i] = WhatToConvert[i].ToString();
+            }
+            catch {  }
+            return output;
+        }
         private string Set_Bad()
         {
             FileInfo F = new FileInfo(BoxBad.Text);
             if (F.Exists)
             {
-                Applications_bad = File.ReadAllLines(BoxBad.Text, Encoding.Default);
+                WhatToConvertT = new List<string>();
+                Applications_bad = File.ReadAllLines(BoxBad.Text, Encoding.UTF8);
+                for (int i = 0; i < Applications_bad.Length; i++)
+                {
+                    if (Applications_bad[i] != "")
+                    {
+                        WhatToConvertT.Add(Applications_bad[i]);
+                    }
+                }
+
+                File.WriteAllLines(BoxBad.Text, ListToStringArray(WhatToConvertT));
+                WhatToConvertT.Clear();
                 return F.FullName;
             }
             else
@@ -88,6 +122,8 @@ namespace Kaspersky_Installed_software_parser
         private int iter = 0;
         private void Button1_Click(object sender, EventArgs e)
         {
+            Set_white();
+            Set_Bad();
             OpenFileDialog openFileDialog1 = new OpenFileDialog()
             {
                 Filter = "XLS files(*.xls)|*.xls|TXT files(*.txt)|*.txt",
@@ -103,10 +139,10 @@ namespace Kaspersky_Installed_software_parser
                 foreach (Excel.Worksheet worksheet in Book.Worksheets)
                 {
                     Sheet = Book.Worksheets[worksheet.Name]; //присваиваем переменной iSht Лист1 или так xlSht = xlWB.ActiveSheet //активный лист
-                    int colNo = Sheet.UsedRange.Columns.Count;
+
                     int rowNo = Sheet.UsedRange.Rows.Count;
                     object[,] array = Sheet.UsedRange.Value;
-                    if (array != null && Applications_bad.Length != 0 && Applications_white.Length != 0)
+                    if (array != null && Applications_bad != null && Applications_white != null && Applications_bad.Length != 0 && Applications_white.Length != 0)
                     {
                         white.Tables.Add();
                         P.Clear();
@@ -151,6 +187,17 @@ namespace Kaspersky_Installed_software_parser
                         Thread rfgfsd = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
                         rfgfsd.Start((object)(rowNo - 1));
                     }
+                    else
+                    {
+                        if (Applications_bad == null)
+                        {
+                            label7.Text = "Bad applications = null";
+                        }
+                        if (Applications_white == null)
+                        {
+                            label7.Text = "White applications = null";
+                        }
+                    }
                 }
                 dataGridView1.Refresh();
                 Process[] pProcess = Process.GetProcessesByName("Excel");// cleanup:
@@ -175,8 +222,8 @@ namespace Kaspersky_Installed_software_parser
                 }
             }
         }
-         
-        void Refresh_datagridview(object rowNo)
+
+        private void Refresh_datagridview(object rowNo)
         {
             for (int j = 0; j < dataGridView1.Rows.Count; j++)
             {
@@ -245,7 +292,7 @@ namespace Kaspersky_Installed_software_parser
                     catch { }
                 }
             }
-            File.WriteAllLines(file, content,Encoding.Default);
+            File.WriteAllLines(file, content, Encoding.UTF8);
             Process.Start(new ProcessStartInfo("explorer.exe", " /select, " + file));
         }
 
@@ -324,12 +371,12 @@ namespace Kaspersky_Installed_software_parser
         {
             if (WhiteRichTextBox.Lines.Length != 0)
             {
-                File.AppendAllLines(BoxWhite.Text, WhiteRichTextBox.Lines, Encoding.Default);
+                File.AppendAllLines(BoxWhite.Text, WhiteRichTextBox.Lines, Encoding.UTF8);
                 WhiteRichTextBox.Clear();
             }
             if (BadRichTextBox.Lines.Length != 0)
             {
-                File.AppendAllLines(BoxBad.Text, BadRichTextBox.Lines,Encoding.Default);
+                File.AppendAllLines(BoxBad.Text, BadRichTextBox.Lines, Encoding.UTF8);
                 BadRichTextBox.Clear();
             }
         }
@@ -351,11 +398,36 @@ namespace Kaspersky_Installed_software_parser
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Process[] pProcess = Process.GetProcessesByName("Excel");// cleanup:
-            for (int i = pProcess.Length; i >= 0; i--)
+            try
             {
-                try { pProcess[0].Kill(); } catch { }
+                string fff = BadRichTextBox.Text;
+                if (BadRichTextBox.Lines.Length != 0 || WhiteRichTextBox.Lines.Length != 0)
+                {
+                    string gh = string.Empty;
+                    gh += "new White applications: " + WhiteRichTextBox.Lines.Length + Environment.NewLine;
+                    gh += "new Bad applications: " + BadRichTextBox.Lines.Length;
+                    DialogResult dialogResult = MessageBox.Show(gh, "Save changes?", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        if (WhiteRichTextBox.Lines.Length != 0)
+                        {
+                            File.AppendAllLines(BoxWhite.Text, WhiteRichTextBox.Lines, Encoding.UTF8);
+                            WhiteRichTextBox.Clear();
+                        }
+                        if (BadRichTextBox.Lines.Length != 0)
+                        {
+                            File.AppendAllLines(BoxBad.Text, BadRichTextBox.Lines, Encoding.UTF8);
+                            BadRichTextBox.Clear();
+                        }
+                    }
+                }
+                Process[] pProcess = Process.GetProcessesByName("Excel");// cleanup:
+                for (int i = pProcess.Length; i >= 0; i--)
+                {
+                    try { pProcess[0].Kill(); } catch { }
+                }
             }
+            catch { }
         }
 
         private void DataGridView1_DoubleClick(object sender, EventArgs e)
