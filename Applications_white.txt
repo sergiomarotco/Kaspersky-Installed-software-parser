@@ -5,7 +5,10 @@ Notepad++
 Mozilla Firefox
 Adobe Acrobat Reader 
 Microsoft Lync
-Рабочее место Администратора "ЦФТ - Платформа развития"
 Mozilla Maintenance Service
 GoToMeeting 8.13.0.7663
-
+Opera Stable 48.0.2685.32
+NXLog-CE
+Microsoft Silverlight
+Mozilla Firefox 56.0 (x86 ru)
+Р”Р°РЅРЅС‹Рµ 2Р“РРЎ Рі.
