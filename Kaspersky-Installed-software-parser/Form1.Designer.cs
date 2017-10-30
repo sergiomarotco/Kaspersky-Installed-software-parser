@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.BoxApplications = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -38,10 +37,7 @@
             this.BoxBad = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.button3 = new System.Windows.Forms.Button();
-            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.label7 = new System.Windows.Forms.Label();
-            this.white = new System.Data.DataSet();
-            this.bindingSource1 = new System.Windows.Forms.BindingSource(this.components);
             this.button4 = new System.Windows.Forms.Button();
             this.BadRichTextBox = new System.Windows.Forms.RichTextBox();
             this.button5 = new System.Windows.Forms.Button();
@@ -53,13 +49,15 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.Software = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DNSname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.white)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).BeginInit();
+            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -71,7 +69,7 @@
             // 
             this.button1.Location = new System.Drawing.Point(177, 8);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(97, 23);
+            this.button1.Size = new System.Drawing.Size(103, 23);
             this.button1.TabIndex = 0;
             this.button1.Text = "Select file";
             this.button1.UseVisualStyleBackColor = true;
@@ -79,7 +77,7 @@
             // 
             // BoxApplications
             // 
-            this.BoxApplications.Location = new System.Drawing.Point(13, 37);
+            this.BoxApplications.Location = new System.Drawing.Point(13, 60);
             this.BoxApplications.Name = "BoxApplications";
             this.BoxApplications.Size = new System.Drawing.Size(351, 22);
             this.BoxApplications.TabIndex = 1;
@@ -97,7 +95,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 68);
+            this.label5.Location = new System.Drawing.Point(10, 91);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(127, 17);
             this.label5.TabIndex = 12;
@@ -105,9 +103,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(177, 65);
+            this.button2.Location = new System.Drawing.Point(177, 88);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(97, 23);
+            this.button2.Size = new System.Drawing.Size(103, 23);
             this.button2.TabIndex = 11;
             this.button2.Text = "Select file";
             this.button2.UseVisualStyleBackColor = true;
@@ -115,7 +113,7 @@
             // 
             // BoxWhite
             // 
-            this.BoxWhite.Location = new System.Drawing.Point(13, 94);
+            this.BoxWhite.Location = new System.Drawing.Point(13, 117);
             this.BoxWhite.Name = "BoxWhite";
             this.BoxWhite.Size = new System.Drawing.Size(351, 22);
             this.BoxWhite.TabIndex = 13;
@@ -123,7 +121,7 @@
             // 
             // BoxBad
             // 
-            this.BoxBad.Location = new System.Drawing.Point(13, 151);
+            this.BoxBad.Location = new System.Drawing.Point(13, 174);
             this.BoxBad.Name = "BoxBad";
             this.BoxBad.Size = new System.Drawing.Size(351, 22);
             this.BoxBad.TabIndex = 16;
@@ -132,7 +130,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 125);
+            this.label6.Location = new System.Drawing.Point(10, 148);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(116, 17);
             this.label6.TabIndex = 15;
@@ -140,18 +138,13 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(177, 122);
+            this.button3.Location = new System.Drawing.Point(177, 145);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(97, 23);
+            this.button3.Size = new System.Drawing.Size(103, 23);
             this.button3.TabIndex = 14;
             this.button3.Text = "Select file";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.Button3_Click);
-            // 
-            // openFileDialog2
-            // 
-            this.openFileDialog2.FileName = "openFileDialog1";
-            this.openFileDialog2.Filter = "TXT files (*.txt)|*.txt";
             // 
             // label7
             // 
@@ -161,18 +154,9 @@
             this.label7.Size = new System.Drawing.Size(0, 17);
             this.label7.TabIndex = 17;
             // 
-            // white
-            // 
-            this.white.DataSetName = "NewDataSet";
-            // 
-            // bindingSource1
-            // 
-            this.bindingSource1.DataSource = this.white;
-            this.bindingSource1.Position = 0;
-            // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(13, 179);
+            this.button4.Location = new System.Drawing.Point(13, 202);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 21;
@@ -182,15 +166,15 @@
             // 
             // BadRichTextBox
             // 
-            this.BadRichTextBox.Location = new System.Drawing.Point(13, 225);
+            this.BadRichTextBox.Location = new System.Drawing.Point(13, 248);
             this.BadRichTextBox.Name = "BadRichTextBox";
-            this.BadRichTextBox.Size = new System.Drawing.Size(351, 253);
+            this.BadRichTextBox.Size = new System.Drawing.Size(351, 230);
             this.BadRichTextBox.TabIndex = 22;
             this.BadRichTextBox.Text = "";
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(94, 179);
+            this.button5.Location = new System.Drawing.Point(94, 202);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(134, 23);
             this.button5.TabIndex = 23;
@@ -201,7 +185,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 205);
+            this.label2.Location = new System.Drawing.Point(10, 228);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(124, 17);
             this.label2.TabIndex = 24;
@@ -226,7 +210,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(234, 179);
+            this.button6.Location = new System.Drawing.Point(234, 202);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(130, 23);
             this.button6.TabIndex = 27;
@@ -275,6 +259,9 @@
             // 
             // splitContainer1.Panel1
             // 
+            this.splitContainer1.Panel1.Controls.Add(this.checkBox3);
+            this.splitContainer1.Panel1.Controls.Add(this.checkBox2);
+            this.splitContainer1.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.linkLabel2);
             this.splitContainer1.Panel1.Controls.Add(this.BadRichTextBox);
@@ -302,6 +289,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(1571, 807);
             this.splitContainer1.SplitterDistance = 368;
             this.splitContainer1.TabIndex = 31;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(13, 33);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(77, 21);
+            this.checkBox1.TabIndex = 31;
+            this.checkBox1.Text = "Lookup";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // dataGridView1
             // 
@@ -349,6 +346,33 @@
             this.Type.Name = "Type";
             this.Type.Width = 69;
             // 
+            // openFileDialog2
+            // 
+            this.openFileDialog2.FileName = "openFileDialog1";
+            this.openFileDialog2.Filter = "TXT files (*.txt)|*.txt";
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(94, 33);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(100, 21);
+            this.checkBox2.TabIndex = 32;
+            this.checkBox2.Text = "Show white";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Checked = true;
+            this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox3.Location = new System.Drawing.Point(200, 33);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(155, 21);
+            this.checkBox3.TabIndex = 33;
+            this.checkBox3.Text = "Only \'Need request\'";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -360,8 +384,6 @@
             this.Text = "Kaspersky installed software parser";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.white)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.bindingSource1)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -383,10 +405,7 @@
         private System.Windows.Forms.TextBox BoxBad;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.OpenFileDialog openFileDialog2;
         private System.Windows.Forms.Label label7;
-        private System.Data.DataSet white;
-        private System.Windows.Forms.BindingSource bindingSource1;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.RichTextBox BadRichTextBox;
         private System.Windows.Forms.Button button5;
@@ -403,6 +422,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn IP;
         private System.Windows.Forms.DataGridViewTextBoxColumn DNSname;
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.OpenFileDialog openFileDialog2;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }
 

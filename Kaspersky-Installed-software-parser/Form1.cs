@@ -8,7 +8,6 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -22,7 +21,12 @@ namespace Kaspersky_Installed_software_parser
             Set_white();
             Set_Bad();
         }
+
         private List<string> WhatToConvertT;
+        /// <summary>
+        /// Перезаписать список хороших слов
+        /// </summary>
+        /// <returns></returns>
         private string Set_white()
         {
             FileInfo F = new FileInfo(BoxWhite.Text);
@@ -32,7 +36,7 @@ namespace Kaspersky_Installed_software_parser
                 Applications_white = File.ReadAllLines(BoxWhite.Text, Encoding.UTF8);
                 for (int i = 0; i < Applications_white.Length; i++)
                 {
-                    if (Applications_white[i] != "")
+                    if (!String.IsNullOrEmpty(Applications_white[i]))
                     {
                         WhatToConvertT.Add(Applications_white[i]);
                     }
@@ -47,7 +51,11 @@ namespace Kaspersky_Installed_software_parser
                 return "";
             }
         }
-
+        /// <summary>
+        /// List<string> to string[]
+        /// </summary>
+        /// <param name="WhatToConvert">List string для конвертирования в string array</param>
+        /// <returns></returns>
         private string[] ListToStringArray(List<string> WhatToConvert)
         {
             string[] output = new string[0];
@@ -55,11 +63,15 @@ namespace Kaspersky_Installed_software_parser
             {
                 output = new string[WhatToConvert.Count];
                 for (int i = 0; i < WhatToConvert.Count; i++)
-                    output[i] = WhatToConvert[i].ToString();
+                    output[i] = WhatToConvert[i];
             }
             catch {  }
             return output;
         }
+        /// <summary>
+        /// Перезаписать список плохих слов
+        /// </summary>
+        /// <returns></returns>
         private string Set_Bad()
         {
             FileInfo F = new FileInfo(BoxBad.Text);
@@ -69,7 +81,7 @@ namespace Kaspersky_Installed_software_parser
                 Applications_bad = File.ReadAllLines(BoxBad.Text, Encoding.UTF8);
                 for (int i = 0; i < Applications_bad.Length; i++)
                 {
-                    if (Applications_bad[i] != "")
+                    if (!String.IsNullOrEmpty(Applications_bad[i]))
                     {
                         WhatToConvertT.Add(Applications_bad[i]);
                     }
@@ -84,7 +96,10 @@ namespace Kaspersky_Installed_software_parser
                 return "";
             }
         }
-
+        /// <summary>
+        /// Определить DNS имя по IP
+        /// </summary>
+        /// <param name="fff"></param>
         private void GetHostEntry(object fff)
         {
             try
@@ -106,8 +121,19 @@ namespace Kaspersky_Installed_software_parser
         }
 
         private List<Programms> P = new List<Programms>();
+        /// <summary>
+        /// Список хороших программ
+        /// </summary>
         private string[] Applications_white;
+        /// <summary>
+        /// Список плохих программ
+        /// </summary>
         private string[] Applications_bad;
+        /// <summary>
+        /// ПРостая функция проверки корректности введенного IP
+        /// </summary>
+        /// <param name="address"></param>
+        /// <returns></returns>
         private static bool CheckIp(string address)
         {
             try
@@ -120,10 +146,13 @@ namespace Kaspersky_Installed_software_parser
         }
 
         private int iter = 0;
+
         private void Button1_Click(object sender, EventArgs e)
         {
             Set_white();
             Set_Bad();
+            dataGridView1.Rows.Clear();
+            dataGridView1.Refresh();
             OpenFileDialog openFileDialog1 = new OpenFileDialog()
             {
                 Filter = "XLS files(*.xls)|*.xls|TXT files(*.txt)|*.txt",
@@ -144,7 +173,6 @@ namespace Kaspersky_Installed_software_parser
                     object[,] array = Sheet.UsedRange.Value;
                     if (array != null && Applications_bad != null && Applications_white != null && Applications_bad.Length != 0 && Applications_white.Length != 0)
                     {
-                        white.Tables.Add();
                         P.Clear();
                         P = new List<Programms>();
                         for (int i = 9; i < rowNo; i++)
@@ -155,9 +183,10 @@ namespace Kaspersky_Installed_software_parser
                             {
                                 for (int j = 0; j < Applications_white.Length; j++)
                                 {
-                                    if (!Applications_white[j].Equals("") && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_white[j], StringComparison.OrdinalIgnoreCase))
+                                    if (!String.IsNullOrEmpty(Applications_white[j]) && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_white[j], StringComparison.OrdinalIgnoreCase))
                                     {
-                                        dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "White");
+                                        if(checkBox2.Checked)
+                                            dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "White");
                                         array[i, 1] = "";//заменить на удаление строки
                                         next = true;
                                         break;
@@ -183,9 +212,11 @@ namespace Kaspersky_Installed_software_parser
                                 }
                             }
                         }
-
-                        Thread rfgfsd = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
-                        rfgfsd.Start((object)(rowNo - 1));
+                        if (checkBox1.Checked)
+                        {
+                            Thread rfgfsd = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
+                            rfgfsd.Start((object)(rowNo - 1));
+                        }
                     }
                     else
                     {
@@ -295,7 +326,11 @@ namespace Kaspersky_Installed_software_parser
             File.WriteAllLines(file, content, Encoding.UTF8);
             Process.Start(new ProcessStartInfo("explorer.exe", " /select, " + file));
         }
-
+        /// <summary>
+        /// Добавить плохое слово
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonBadADD_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count != 0)
@@ -328,10 +363,28 @@ namespace Kaspersky_Installed_software_parser
                     catch { }
                 }
                 BadRichTextBox.Lines = BadRichTextBox.Lines.Distinct().ToArray();
-                dataGridView1.CurrentCell = dataGridView1[0, dataGridView1.SelectedRows[0].Index + 1];
+                dataGridView1.Enabled = false;
+                for (int d = dataGridView1.SelectedRows[0].Index; d < dataGridView1.RowCount; d++)
+                {
+                    if (!dataGridView1.CurrentRow.Cells[3].Value.Equals("Need request"))
+                    {
+                        dataGridView1.CurrentCell = dataGridView1[0, d];
+                        dataGridView1.Refresh();
+                    }
+                    else
+                    {
+                        dataGridView1.Enabled = true;
+                        break;
+                    }
+                }
+                dataGridView1.Enabled = true;
             }
         }
-
+        /// <summary>
+        /// Добавить хорошее слово
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ButtonWhiteADD_Click(object sender, EventArgs e)
         {
             string newsoft = "";
@@ -363,7 +416,21 @@ namespace Kaspersky_Installed_software_parser
                     catch { }
                 }
                 WhiteRichTextBox.Lines = WhiteRichTextBox.Lines.Distinct().ToArray();
-                dataGridView1.CurrentCell = dataGridView1[0, dataGridView1.SelectedRows[0].Index + 1];
+                dataGridView1.Enabled = false;
+                for (int d = dataGridView1.SelectedRows[0].Index; d < dataGridView1.RowCount; d++)
+                {
+                    if (!dataGridView1.CurrentRow.Cells[3].Value.Equals("Need request"))
+                    {
+                        dataGridView1.CurrentCell = dataGridView1[0, d];
+                        dataGridView1.Refresh();
+                    }
+                    else
+                    {
+                        dataGridView1.Enabled = true;
+                        break;
+                    }
+                    dataGridView1.Enabled = true;
+                }
             }
         }
 
@@ -400,7 +467,6 @@ namespace Kaspersky_Installed_software_parser
         {
             try
             {
-                string fff = BadRichTextBox.Text;
                 if (BadRichTextBox.Lines.Length != 0 || WhiteRichTextBox.Lines.Length != 0)
                 {
                     string gh = string.Empty;
