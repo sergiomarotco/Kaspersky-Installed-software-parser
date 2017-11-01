@@ -179,14 +179,14 @@ namespace Kaspersky_Installed_software_parser
                         {
                             P.Add(new Programms(array[i, 1].ToString(), array[i, 3].ToString()));
                             bool next = false;
-                            if (!array[i, 1].Equals(""))
+                            if (!String.IsNullOrEmpty(array[i, 1].ToString()))
                             {
                                 for (int j = 0; j < Applications_white.Length; j++)
                                 {
                                     if (!String.IsNullOrEmpty(Applications_white[j]) && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_white[j], StringComparison.OrdinalIgnoreCase))
                                     {
                                         if(checkBox2.Checked)
-                                            dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "White");
+                                            dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "White");
                                         array[i, 1] = "";//заменить на удаление строки
                                         next = true;
                                         break;
@@ -196,9 +196,9 @@ namespace Kaspersky_Installed_software_parser
                                 {
                                     for (int j = 0; j < Applications_bad.Length; j++)
                                     {
-                                        if (!Applications_bad[j].Equals("") && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_bad[j], StringComparison.OrdinalIgnoreCase))
+                                        if (!String.IsNullOrEmpty(Applications_bad[j]) && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_bad[j], StringComparison.OrdinalIgnoreCase))
                                         {
-                                            dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "Bad");
+                                            dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "Bad");
                                             array[i, 1] = "";//заменить на удаление строки
                                             next = true;
                                             break;
@@ -207,15 +207,15 @@ namespace Kaspersky_Installed_software_parser
                                 }
                                 if (!next)
                                 {
-                                    dataGridView1.Rows.Add(array[i, 1], array[i, 3], "...", "Need request");
+                                    dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "Need request");
                                     array[i, 1] = "";
                                 }
                             }
                         }
                         if (checkBox1.Checked)
                         {
-                            Thread rfgfsd = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
-                            rfgfsd.Start((object)(rowNo - 1));
+                            Thread t = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
+                            t.Start((object)(rowNo - 1));
                         }
                     }
                     else
@@ -252,8 +252,26 @@ namespace Kaspersky_Installed_software_parser
                     Excel_App = null;
                 }
             }
+            dataGridView1.Enabled = false;
+            for (int d = 0; d < dataGridView1.RowCount; d++)
+            {
+                if (!dataGridView1.CurrentRow.Cells[4].Value.Equals("Need request"))
+                {
+                    dataGridView1.CurrentCell = dataGridView1[0, d];
+                    dataGridView1.Refresh();
+                }
+                else
+                {
+                    dataGridView1.Enabled = true;
+                    break;
+                }
+            }
+            dataGridView1.Enabled = true;
         }
-
+        /// <summary>
+        /// DNSlookup IP ресурсов
+        /// </summary>
+        /// <param name="rowNo"></param>
         private void Refresh_datagridview(object rowNo)
         {
             for (int j = 0; j < dataGridView1.Rows.Count; j++)
@@ -296,8 +314,6 @@ namespace Kaspersky_Installed_software_parser
 
         private void Button4_Click(object sender, EventArgs e)
         {
-            var t = DateTime.Now;
-            string file = t.Year + "." + t.Month + "." + t.Day + " " + t.Hour + "-" + t.Minute + "-" + t.Second+".csv";
             string[] content = new string[dataGridView1.SelectedRows.Count];
             if (dataGridView1.SelectedRows.Count == 0)
             {
@@ -305,8 +321,8 @@ namespace Kaspersky_Installed_software_parser
                 {
                     for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
                     {
-                        var row = dataGridView1.SelectedRows[i];
-                        content[i] = row.Cells[0].Value + "," + row.Cells[1].Value + "," + row.Cells[2].Value + "," + row.Cells[3].Value;
+                        DataGridViewRow row = dataGridView1.SelectedRows[i];
+                        content[i] = row.Cells[0].Value + "," + row.Cells[1].Value + "," + row.Cells[2].Value + "," + row.Cells[3].Value + "," + row.Cells[4].Value;
                     }
                 }
                 catch { }
@@ -317,14 +333,16 @@ namespace Kaspersky_Installed_software_parser
                 {
                     try
                     {
-                        var row = dataGridView1.Rows[i];
-                        content[i] = row.Cells[0].Value + "," + row.Cells[1].Value + "," + row.Cells[2].Value + "," + row.Cells[3].Value;
+                        DataGridViewRow row = dataGridView1.Rows[i];
+                        content[i] = row.Cells[0].Value + "," + row.Cells[1].Value + "," + row.Cells[2].Value + "," + row.Cells[3].Value + "," + row.Cells[4].Value;
                     }
                     catch { }
                 }
             }
-            File.WriteAllLines(file, content, Encoding.UTF8);
-            Process.Start(new ProcessStartInfo("explorer.exe", " /select, " + file));
+            DateTime t = DateTime.Now;
+            string filename = t.Year + "." + t.Month + "." + t.Day + " " + t.Hour + "-" + t.Minute + "-" + t.Second + ".csv";
+            File.WriteAllLines(filename, content, Encoding.UTF8);
+            Process.Start(new ProcessStartInfo("explorer.exe", " /select, " + filename));
         }
         /// <summary>
         /// Добавить плохое слово
@@ -333,51 +351,42 @@ namespace Kaspersky_Installed_software_parser
         /// <param name="e"></param>
         private void ButtonBadADD_Click(object sender, EventArgs e)
         {
+            string newsoft = "";
             if (dataGridView1.Rows.Count != 0)
             {
-                string newsoft = "";
-                for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
-                {
-                    try
-                    {
-                        var row = dataGridView1.SelectedRows[i];
-                        BadRichTextBox.Text += row.Cells[0].Value + Environment.NewLine;
-                        dataGridView1.Rows[i].Cells[3].Value = "Bad";
-                        newsoft = row.Cells[0].Value.ToString();
-                        break;
-                    }
-                    catch { }
-                }
-                dataGridView1.Refresh();
+                DataGridViewRow row = dataGridView1.SelectedRows[0];
+                newsoft = row.Cells[0].Value.ToString();//фиксируем текущую программу
+                BadRichTextBox.Text += newsoft + Environment.NewLine;//Добавить новое белое слово
+                dataGridView1.Rows[row.Index].Cells[4].Value = "Bad";//Помечаем текущую программу в списке белой
+
                 for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
                     try
                     {
-                        var row = dataGridView1.Rows[i];
-                        if (row.Cells[0].Value.ToString().Equals(newsoft, StringComparison.OrdinalIgnoreCase))
+                        row = dataGridView1.Rows[i];
+                        if (row.Cells[0].Value.ToString().Equals(newsoft, StringComparison.OrdinalIgnoreCase))//если какая либо из строк является такой же программой
                         {
-                            BadRichTextBox.Text += dataGridView1.Rows[i].Cells[0].Value + Environment.NewLine;
-                            dataGridView1.Rows[i].Cells[3].Value = "Bad";
+                            //BadRichTextBox.Text += row.Cells[0].Value + Environment.NewLine;
+                            dataGridView1.Rows[i].Cells[4].Value = "Bad";//помечаем такую же программу белой
                         }
                     }
                     catch { }
                 }
-                BadRichTextBox.Lines = BadRichTextBox.Lines.Distinct().ToArray();
+                BadRichTextBox.Lines = BadRichTextBox.Lines.Distinct().ToArray();//удаляем дубли
                 dataGridView1.Enabled = false;
                 for (int d = dataGridView1.SelectedRows[0].Index; d < dataGridView1.RowCount; d++)
                 {
-                    if (!dataGridView1.CurrentRow.Cells[3].Value.Equals("Need request"))
+                    if (!dataGridView1.CurrentRow.Cells[4].Value.Equals("Need request"))
                     {
                         dataGridView1.CurrentCell = dataGridView1[0, d];
                         dataGridView1.Refresh();
                     }
                     else
                     {
-                        dataGridView1.Enabled = true;
                         break;
                     }
                 }
-                dataGridView1.Enabled = true;
+                dataGridView1.Enabled = true;//разблокируем
             }
         }
         /// <summary>
@@ -390,47 +399,38 @@ namespace Kaspersky_Installed_software_parser
             string newsoft = "";
             if (dataGridView1.Rows.Count != 0)
             {
-                for (int i = 0; i < dataGridView1.SelectedRows.Count; i++)
-                {
-                    try
-                    {
-                        var row = dataGridView1.SelectedRows[i];
-                        WhiteRichTextBox.Text += row.Cells[0].Value + Environment.NewLine;
-                        dataGridView1.Rows[i].Cells[3].Value = "White";
-                        newsoft = row.Cells[0].Value.ToString();
-                        break;
-                    }
-                    catch { }
-                }
+                DataGridViewRow row = dataGridView1.SelectedRows[0];
+                newsoft = row.Cells[0].Value.ToString();//фиксируем текущую программу
+                WhiteRichTextBox.Text += newsoft + Environment.NewLine;//Добавить новое белое слово
+                dataGridView1.Rows[row.Index].Cells[4].Value = "White";//Помечаем текущую программу в списке белой                
                 for (int i = 0; i < dataGridView1.Rows.Count; i++)
                 {
                     try
                     {
-                        var row = dataGridView1.Rows[i];
-                        if (row.Cells[0].Value.ToString().Equals(newsoft, StringComparison.OrdinalIgnoreCase))
+                        row = dataGridView1.Rows[i];
+                        if (row.Cells[0].Value.ToString().Equals(newsoft, StringComparison.OrdinalIgnoreCase))//если какая либо из строк является такой же программой
                         {
-                            WhiteRichTextBox.Text += row.Cells[0].Value + Environment.NewLine;
-                            dataGridView1.Rows[i].Cells[3].Value = "White";
+                            //WhiteRichTextBox.Text += row.Cells[0].Value + Environment.NewLine;
+                            dataGridView1.Rows[i].Cells[4].Value = "White";//помечаем такую же программу белой
                         }
                     }
                     catch { }
                 }
-                WhiteRichTextBox.Lines = WhiteRichTextBox.Lines.Distinct().ToArray();
+                WhiteRichTextBox.Lines = WhiteRichTextBox.Lines.Distinct().ToArray();//удаляем дубли
                 dataGridView1.Enabled = false;
                 for (int d = dataGridView1.SelectedRows[0].Index; d < dataGridView1.RowCount; d++)
                 {
-                    if (!dataGridView1.CurrentRow.Cells[3].Value.Equals("Need request"))
+                    if (!dataGridView1.CurrentRow.Cells[4].Value.Equals("Need request"))
                     {
                         dataGridView1.CurrentCell = dataGridView1[0, d];
                         dataGridView1.Refresh();
                     }
                     else
                     {
-                        dataGridView1.Enabled = true;
                         break;
                     }
-                    dataGridView1.Enabled = true;
                 }
+                dataGridView1.Enabled = true;//разблокируем
             }
         }
 

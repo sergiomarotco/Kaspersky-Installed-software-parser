@@ -49,15 +49,16 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.Software = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Vendor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DNSname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -290,6 +291,28 @@
             this.splitContainer1.SplitterDistance = 368;
             this.splitContainer1.TabIndex = 31;
             // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Checked = true;
+            this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox3.Location = new System.Drawing.Point(200, 33);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(155, 21);
+            this.checkBox3.TabIndex = 33;
+            this.checkBox3.Text = "Only \'Need request\'";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Location = new System.Drawing.Point(94, 33);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(100, 21);
+            this.checkBox2.TabIndex = 32;
+            this.checkBox2.Text = "Show white";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
@@ -309,6 +332,7 @@
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Software,
+            this.Vendor,
             this.IP,
             this.DNSname,
             this.Type});
@@ -322,11 +346,22 @@
             this.dataGridView1.TabIndex = 21;
             this.dataGridView1.DoubleClick += new System.EventHandler(this.DataGridView1_DoubleClick);
             // 
+            // openFileDialog2
+            // 
+            this.openFileDialog2.FileName = "openFileDialog1";
+            this.openFileDialog2.Filter = "TXT files (*.txt)|*.txt";
+            // 
             // Software
             // 
             this.Software.HeaderText = "Software";
             this.Software.Name = "Software";
             this.Software.Width = 92;
+            // 
+            // Vendor
+            // 
+            this.Vendor.HeaderText = "Vendor";
+            this.Vendor.Name = "Vendor";
+            this.Vendor.Width = 83;
             // 
             // IP
             // 
@@ -345,33 +380,6 @@
             this.Type.HeaderText = "Type";
             this.Type.Name = "Type";
             this.Type.Width = 69;
-            // 
-            // openFileDialog2
-            // 
-            this.openFileDialog2.FileName = "openFileDialog1";
-            this.openFileDialog2.Filter = "TXT files (*.txt)|*.txt";
-            // 
-            // checkBox2
-            // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(94, 33);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(100, 21);
-            this.checkBox2.TabIndex = 32;
-            this.checkBox2.Text = "Show white";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            // 
-            // checkBox3
-            // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Checked = true;
-            this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox3.Location = new System.Drawing.Point(200, 33);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(155, 21);
-            this.checkBox3.TabIndex = 33;
-            this.checkBox3.Text = "Only \'Need request\'";
-            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -418,14 +426,15 @@
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Software;
-        private System.Windows.Forms.DataGridViewTextBoxColumn IP;
-        private System.Windows.Forms.DataGridViewTextBoxColumn DNSname;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.OpenFileDialog openFileDialog2;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Software;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Vendor;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IP;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DNSname;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
     }
 }
 
