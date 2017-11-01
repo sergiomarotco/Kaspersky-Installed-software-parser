@@ -53,12 +53,12 @@
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.Software = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Vendor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.IP = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.DNSname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -287,7 +287,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
-            this.splitContainer1.Size = new System.Drawing.Size(1571, 807);
+            this.splitContainer1.Size = new System.Drawing.Size(1614, 807);
             this.splitContainer1.SplitterDistance = 368;
             this.splitContainer1.TabIndex = 31;
             // 
@@ -329,6 +329,7 @@
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.AllowUserToOrderColumns = true;
             this.dataGridView1.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Software,
@@ -342,14 +343,9 @@
             this.dataGridView1.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Sunken;
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView1.Size = new System.Drawing.Size(1199, 807);
+            this.dataGridView1.Size = new System.Drawing.Size(1242, 807);
             this.dataGridView1.TabIndex = 21;
             this.dataGridView1.DoubleClick += new System.EventHandler(this.DataGridView1_DoubleClick);
-            // 
-            // openFileDialog2
-            // 
-            this.openFileDialog2.FileName = "openFileDialog1";
-            this.openFileDialog2.Filter = "TXT files (*.txt)|*.txt";
             // 
             // Software
             // 
@@ -381,11 +377,16 @@
             this.Type.Name = "Type";
             this.Type.Width = 69;
             // 
+            // openFileDialog2
+            // 
+            this.openFileDialog2.FileName = "openFileDialog1";
+            this.openFileDialog2.Filter = "TXT files (*.txt)|*.txt";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1571, 807);
+            this.ClientSize = new System.Drawing.Size(1614, 807);
             this.Controls.Add(this.splitContainer1);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

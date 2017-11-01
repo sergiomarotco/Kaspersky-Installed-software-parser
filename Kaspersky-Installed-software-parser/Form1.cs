@@ -27,29 +27,33 @@ namespace Kaspersky_Installed_software_parser
         /// Перезаписать список хороших слов
         /// </summary>
         /// <returns></returns>
-        private string Set_white()
+        private void Set_white()
         {
-            FileInfo F = new FileInfo(BoxWhite.Text);
-            if (F.Exists)
+            try
             {
-                WhatToConvertT = new List<string>();
-                Applications_white = File.ReadAllLines(BoxWhite.Text, Encoding.UTF8);
-                for (int i = 0; i < Applications_white.Length; i++)
+                FileInfo F = new FileInfo(BoxWhite.Text);
+                if (F.Exists)
                 {
-                    if (!String.IsNullOrEmpty(Applications_white[i]))
+                    WhatToConvertT = new List<string>();
+                    Applications_white = File.ReadAllLines(BoxWhite.Text, Encoding.UTF8);
+                    for (int i = 0; i < Applications_white.Length; i++)
                     {
-                        WhatToConvertT.Add(Applications_white[i]);
+                        if (!String.IsNullOrEmpty(Applications_white[i]))
+                        {
+                            WhatToConvertT.Add(Applications_white[i]);
+                        }
                     }
-                }
 
-                File.WriteAllLines(BoxWhite.Text, ListToStringArray(WhatToConvertT));
-                WhatToConvertT.Clear();
-                return F.FullName;
+                    File.WriteAllLines(BoxWhite.Text, ListToStringArray(WhatToConvertT));
+                    WhatToConvertT.Clear();
+                }
+                else
+                {
+                    F.Create();
+                    Applications_white = new string[0];
+                }
             }
-            else
-            {
-                return "";
-            }
+            catch { }
         }
         /// <summary>
         /// List<string> to string[]
@@ -72,29 +76,33 @@ namespace Kaspersky_Installed_software_parser
         /// Перезаписать список плохих слов
         /// </summary>
         /// <returns></returns>
-        private string Set_Bad()
+        private void Set_Bad()
         {
-            FileInfo F = new FileInfo(BoxBad.Text);
-            if (F.Exists)
+            try
             {
-                WhatToConvertT = new List<string>();
-                Applications_bad = File.ReadAllLines(BoxBad.Text, Encoding.UTF8);
-                for (int i = 0; i < Applications_bad.Length; i++)
+                FileInfo F = new FileInfo(BoxBad.Text);
+                if (F.Exists)
                 {
-                    if (!String.IsNullOrEmpty(Applications_bad[i]))
+                    WhatToConvertT = new List<string>();
+                    Applications_bad = File.ReadAllLines(BoxBad.Text, Encoding.UTF8);
+                    for (int i = 0; i < Applications_bad.Length; i++)
                     {
-                        WhatToConvertT.Add(Applications_bad[i]);
+                        if (!String.IsNullOrEmpty(Applications_bad[i]))
+                        {
+                            WhatToConvertT.Add(Applications_bad[i]);
+                        }
                     }
-                }
 
-                File.WriteAllLines(BoxBad.Text, ListToStringArray(WhatToConvertT));
-                WhatToConvertT.Clear();
-                return F.FullName;
+                    File.WriteAllLines(BoxBad.Text, ListToStringArray(WhatToConvertT));
+                    WhatToConvertT.Clear();
+                }
+                else
+                {
+                    F.Create();
+                    Applications_bad = new string[0];
+                }
             }
-            else
-            {
-                return "";
-            }
+            catch { }
         }
         /// <summary>
         /// Определить DNS имя по IP
@@ -105,16 +113,16 @@ namespace Kaspersky_Installed_software_parser
             try
             {
                 string[] str = Array.ConvertAll<object, string>((object[])fff, Convert.ToString);
-
                 if (CheckIp(str[0]))
                 {
                     string dnsname = "";
                     try
                     {
-                        dnsname = Dns.GetHostEntry(str[0]).HostName;
+                        dnsname = Dns.GetHostEntry(str[2]).HostName;
                     }
-                    catch (Exception ee) { dnsname = ee.Message; }
-                    Invoke((ThreadStart)delegate { dataGridView1.Rows[Convert.ToInt32(str[1])].Cells[2].Value = dnsname; iter++; label7.Text = iter.ToString() + " / " + dataGridView1.Rows.Count; label7.Refresh(); });
+                    catch (Exception ee)
+                    { dnsname = ee.Message; }
+                    Invoke((ThreadStart)delegate { dataGridView1.Rows[Convert.ToInt32(str[1])].Cells[3].Value = dnsname; iter++; label7.Text = iter.ToString() + " / " + dataGridView1.Rows.Count; label7.Refresh(); });
                 }
             }
             catch { }
@@ -142,7 +150,8 @@ namespace Kaspersky_Installed_software_parser
                 int useless;
                 return nums.Length == 4 && nums.All(n => int.TryParse(n, out useless)) && nums.Select(int.Parse).All(n => n < 256);
             }
-            catch { return false; }
+            catch
+            { return false; }
         }
 
         private int iter = 0;
@@ -161,95 +170,99 @@ namespace Kaspersky_Installed_software_parser
             };
             if (openFileDialog1.ShowDialog() == DialogResult.OK && openFileDialog1.FileName.Contains(".xls", StringComparison.OrdinalIgnoreCase))
             {
-                BoxApplications.Text = openFileDialog1.FileName;
-                Excel.Worksheet Sheet = new Excel.Worksheet(); //какой-то рабочий лист Excel
-                Excel.Application Excel_App = new Excel.Application(); //создаём приложение Excel
-                Excel.Workbook Book = Excel_App.Workbooks.Open(openFileDialog1.FileName); //открываем наш файл (Рабочую книгу Excel) //xlApp.Visible = true; //сделать Excel видимым, но это не обязательно
-                foreach (Excel.Worksheet worksheet in Book.Worksheets)
+                try
                 {
-                    Sheet = Book.Worksheets[worksheet.Name]; //присваиваем переменной iSht Лист1 или так xlSht = xlWB.ActiveSheet //активный лист
-                    int rowNo = Sheet.UsedRange.Rows.Count;
-                    object[,] array = Sheet.UsedRange.Value;
-                    if (array != null && Applications_bad != null && Applications_white != null)
+                    BoxApplications.Text = openFileDialog1.FileName;
+                    Excel.Worksheet Sheet = new Excel.Worksheet(); //какой-то рабочий лист Excel
+                    Excel.Application Excel_App = new Excel.Application(); //создаём приложение Excel
+                    Excel.Workbook Book = Excel_App.Workbooks.Open(openFileDialog1.FileName); //открываем наш файл (Рабочую книгу Excel) //xlApp.Visible = true; //сделать Excel видимым, но это не обязательно
+                    foreach (Excel.Worksheet worksheet in Book.Worksheets)
                     {
-                        P.Clear();
-                        P = new List<Programms>();
-                        for (int i = 9; i < rowNo; i++)
+                        Sheet = Book.Worksheets[worksheet.Name]; //присваиваем переменной iSht Лист1 или так xlSht = xlWB.ActiveSheet //активный лист
+                        int rowNo = Sheet.UsedRange.Rows.Count;
+                        object[,] array = Sheet.UsedRange.Value;
+                        if (array != null && Applications_bad != null && Applications_white != null)
                         {
-                            P.Add(new Programms(array[i, 1].ToString(), array[i, 3].ToString()));
-                            bool next = false;
-                            if (!String.IsNullOrEmpty(array[i, 1].ToString()))
+                            P.Clear();
+                            P = new List<Programms>();
+                            for (int i = 9; i < rowNo; i++)
                             {
-                                for (int j = 0; j < Applications_white.Length; j++)
+                                P.Add(new Programms(array[i, 1].ToString(), array[i, 3].ToString()));
+                                bool next = false;
+                                if (!String.IsNullOrEmpty(array[i, 1].ToString()))
                                 {
-                                    if (!String.IsNullOrEmpty(Applications_white[j]) && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_white[j], StringComparison.OrdinalIgnoreCase))
+                                    for (int j = 0; j < Applications_white.Length; j++)
                                     {
-                                        if(checkBox2.Checked)
-                                            dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "White");
-                                        array[i, 1] = "";//заменить на удаление строки
-                                        next = true;
-                                        break;
-                                    }
-                                }
-                                if (!next)
-                                {
-                                    for (int j = 0; j < Applications_bad.Length; j++)
-                                    {
-                                        if (!String.IsNullOrEmpty(Applications_bad[j]) && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_bad[j], StringComparison.OrdinalIgnoreCase))
+                                        if (!String.IsNullOrEmpty(Applications_white[j]) && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_white[j], StringComparison.OrdinalIgnoreCase))
                                         {
-                                            dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "Bad");
+                                            if (checkBox2.Checked)
+                                                dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "White");
                                             array[i, 1] = "";//заменить на удаление строки
                                             next = true;
                                             break;
                                         }
                                     }
-                                }
-                                if (!next)
-                                {
-                                    dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "Need request");
-                                    array[i, 1] = "";
+                                    if (!next)
+                                    {
+                                        for (int j = 0; j < Applications_bad.Length; j++)
+                                        {
+                                            if (!String.IsNullOrEmpty(Applications_bad[j]) && array[i, 1] != null && array[i, 1].ToString().Contains(Applications_bad[j], StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "Bad");
+                                                array[i, 1] = "";//заменить на удаление строки
+                                                next = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (!next)
+                                    {
+                                        dataGridView1.Rows.Add(array[i, 1], array[i, 2], array[i, 3], "...", "Need request");
+                                        array[i, 1] = "";
+                                    }
                                 }
                             }
+                            if (checkBox1.Checked)
+                            {
+                                Thread t = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
+                                t.Start((object)(rowNo - 1));
+                            }
                         }
-                        if (checkBox1.Checked)
+                        else
                         {
-                            Thread t = new Thread(new ParameterizedThreadStart(Refresh_datagridview));
-                            t.Start((object)(rowNo - 1));
+                            if (Applications_bad == null)
+                            {
+                                label7.Text = "Bad applications = null";
+                            }
+                            if (Applications_white == null)
+                            {
+                                label7.Text = "White applications = null";
+                            }
                         }
                     }
-                    else
+                    dataGridView1.Refresh();
+                    Process[] pProcess = Process.GetProcessesByName("Excel");// cleanup:
+                    for (int i = pProcess.Length; i >= 0; i--)
                     {
-                        if (Applications_bad == null)
-                        {
-                            label7.Text = "Bad applications = null";
-                        }
-                        if (Applications_white == null)
-                        {
-                            label7.Text = "White applications = null";
-                        }
+                        try { pProcess[0].Kill(); } catch { }
+                    }
+                    if (Sheet != null)
+                    {
+                        Marshal.FinalReleaseComObject(Sheet);
+                        Sheet = null;
+                    }
+                    if (Book != null)
+                    {
+                        Marshal.FinalReleaseComObject(Book);
+                        Book = null;
+                    }
+                    if (Excel_App != null)
+                    {
+                        Marshal.FinalReleaseComObject(Excel_App);
+                        Excel_App = null;
                     }
                 }
-                dataGridView1.Refresh();
-                Process[] pProcess = Process.GetProcessesByName("Excel");// cleanup:
-                for (int i = pProcess.Length; i >= 0; i--)
-                {
-                    try { pProcess[0].Kill(); } catch { }
-                }
-                if (Sheet != null)
-                {
-                    Marshal.FinalReleaseComObject(Sheet);
-                    Sheet = null;
-                }
-                if (Book != null)
-                {
-                    Marshal.FinalReleaseComObject(Book);
-                    Book = null;
-                }
-                if (Excel_App != null)
-                {
-                    Marshal.FinalReleaseComObject(Excel_App);
-                    Excel_App = null;
-                }
+                catch { }
             }
             dataGridView1.Enabled = false;
             bool isneed = false;
@@ -291,7 +304,7 @@ namespace Kaspersky_Installed_software_parser
                 try
                 {
                     Thread myThread = new Thread(new ParameterizedThreadStart(GetHostEntry));
-                    string[] h = new string[3] { dataGridView1.Rows[j].Cells[1].Value.ToString(), j.ToString(), rowNo.ToString() };
+                    string[] h = new string[3] { dataGridView1.Rows[j].Cells[2].Value.ToString(), j.ToString(), rowNo.ToString() };
                     myThread.Start((object)h);
                 }
                 catch { }
