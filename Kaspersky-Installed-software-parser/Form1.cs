@@ -168,10 +168,9 @@ namespace Kaspersky_Installed_software_parser
                 foreach (Excel.Worksheet worksheet in Book.Worksheets)
                 {
                     Sheet = Book.Worksheets[worksheet.Name]; //присваиваем переменной iSht Лист1 или так xlSht = xlWB.ActiveSheet //активный лист
-
                     int rowNo = Sheet.UsedRange.Rows.Count;
                     object[,] array = Sheet.UsedRange.Value;
-                    if (array != null && Applications_bad != null && Applications_white != null && Applications_bad.Length != 0 && Applications_white.Length != 0)
+                    if (array != null && Applications_bad != null && Applications_white != null)
                     {
                         P.Clear();
                         P = new List<Programms>();
@@ -253,17 +252,30 @@ namespace Kaspersky_Installed_software_parser
                 }
             }
             dataGridView1.Enabled = false;
+            bool isneed = false;
             for (int d = 0; d < dataGridView1.RowCount; d++)
             {
-                if (!dataGridView1.CurrentRow.Cells[4].Value.Equals("Need request"))
+                DataGridViewRow row = dataGridView1.Rows[d];
+                if (row.Cells[4].Value.ToString().Equals("Need request"))
                 {
-                    dataGridView1.CurrentCell = dataGridView1[0, d];
-                    dataGridView1.Refresh();
-                }
-                else
-                {
-                    dataGridView1.Enabled = true;
+                    isneed = true;
                     break;
+                }
+            }
+            if (isneed)
+            {
+                for (int d = 0; d < dataGridView1.RowCount; d++)
+                {
+                    if (!dataGridView1.CurrentRow.Cells[4].Value.Equals("Need request"))
+                    {
+                        dataGridView1.CurrentCell = dataGridView1[0, d];
+                        dataGridView1.Refresh();
+                    }
+                    else
+                    {
+                        dataGridView1.Enabled = true;
+                        break;
+                    }
                 }
             }
             dataGridView1.Enabled = true;
@@ -379,7 +391,7 @@ namespace Kaspersky_Installed_software_parser
                     if (!dataGridView1.CurrentRow.Cells[4].Value.Equals("Need request"))
                     {
                         dataGridView1.CurrentCell = dataGridView1[0, d];
-                        dataGridView1.Refresh();
+                        //dataGridView1.Refresh();
                     }
                     else
                     {
@@ -423,7 +435,7 @@ namespace Kaspersky_Installed_software_parser
                     if (!dataGridView1.CurrentRow.Cells[4].Value.Equals("Need request"))
                     {
                         dataGridView1.CurrentCell = dataGridView1[0, d];
-                        dataGridView1.Refresh();
+                        //dataGridView1.Refresh();
                     }
                     else
                     {
@@ -453,9 +465,39 @@ namespace Kaspersky_Installed_software_parser
             Process.Start("mailto:sergiomarotco@gmail.com");
         }
 
+        private Duplicates D;
         private void Form1_Load(object sender, EventArgs e)
         {
             Icon = Properties.Resources.icon;
+            Set_white();
+            Set_Bad();
+
+            List<string> DublicatesWords = new List<string>();
+            // Applications_white;
+            //  Applications_bad;
+            for (int w = 0; w < Applications_white.Length; w++)
+            {
+                for (int b = 0; b < Applications_bad.Length; b++)
+                {
+                    if (Applications_white[w].Equals(Applications_bad[b]))
+                    {
+                        DublicatesWords.Add(Applications_white[w]);
+                        break;
+                    }
+                }
+            }
+            if (DublicatesWords.Count != 0)
+            {
+                this.Hide();
+                D = new Duplicates(DublicatesWords,BoxBad.Text,BoxWhite.Text)
+                {
+                    Owner = this
+                };
+                D.ShowDialog();
+                Set_white();
+                Set_Bad();
+                this.Show();
+            }
         }
 
         private void LinkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
